@@ -1,81 +1,49 @@
-use bevy::prelude::*;
+use bevy::{prelude::*, transform::commands, window::PrimaryWindow, render::camera::ScalingMode};
 
-fn main() {
+fn main () {
     App::new()
-        .add_plugins(DefaultPlugins)        
-        .add_plugin(PeoplePlugin)
+        .add_plugins(DefaultPlugins)
+        .add_startup_system(spawn_camere)
+        .add_startup_system(spawn_player)
         .run();
+
 }
 
 #[derive(Component)]
-pub struct Person {
-    pub name: String,
-}
+pub struct Player {}
+pub fn spawn_player (
+   mut commands: Commands,
+   window_query: Query<&Window, With<PrimaryWindow>>,
+   asset_server: Res<AssetServer> 
+) {
+    let windown: &Window = window_query.get_single().unwrap();
 
-// Usamos commando para adicionar ou remove components
-pub fn setup(mut commands: Commands) {
-    commands.spawn((
-        Person {
-            name: "Alex".to_string(),
+    commands.spawn( (
+        SpriteBundle {
+            transform: Transform::from_xyz(windown.width() / 2.0, windown.height() / 2.0, 0.0),
+            texture: asset_server.load("/sprites/kenney_mini-dungeon/character-human.png"),
+        ..default()
         },
-        Employed {
-            job: Job::Doctor
-            }
+        Player {}
     ));
 }
 
-pub struct  PeoplePlugin;
 
-impl Plugin for PeoplePlugin {
-    fn build(&self, app: &mut App) {
-        app.add_system(print_name)
-        .add_system(people_with_jobs);
-    }
-
-    fn setup(&self, _app: &mut App) {
-        // do nothing
-        _app.add_startup_system(setup);
-    }
-
-    fn name(&self) -> &str {
-        std::any::type_name::<Self>()
-    }
-
-    fn is_unique(&self) -> bool {
-        true
-    }
-}
-
-
-pub fn print_name(person_query: Query<&Person>) {
-    for person in person_query.iter() {
-        println!("Name:  {}", person.name);
-    }
-}
-
-pub fn people_with_jobs (
-    person_query: Query<&Person, With<Employed>>
+pub fn spawn_camera(
+    mut commands: Commands,
+    window_query: Query<&Window, With<PrimaryWindow>>,
 ) {
-    for person in person_query.iter() {
-        println!("{} has job", person.name)
-    }
-}
+    let window: &Window = window_query.get_single().unwrap();
 
-pub fn people_ready_for_hire(
-    person_query: Query<&Person, With<Employed>>
-) {
-    for person in person_query.iter() {
-        println!("{} is ready to hire", person.name)
-    }
-}
-
-#[derive(Component)]
-pub struct Employed {
-    pub job: Job,
-}
-
-pub enum Job {
-    Doctor,
-    Fire,
-    Lawyer,
+    commands.spawn(
+        Camera3dBundle {
+            projection: OrthographicProjection {
+                scale: 3.0,
+                scaling_mode: ScalingMode::FixedVertical(2.0),
+                ..default()
+            }
+            .into(), 
+            transform : Transform::from_xyz(5.0, 5.0, 5.0).looking_at(Vec3::ZERO, Vec3::Y), 
+            ..default()
+        });   
 }
