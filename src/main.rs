@@ -11,6 +11,8 @@ mod Ground;
 use Ground::GroundPlugin;
 mod system;
 
+
+
 use self::system::spawn_camera;
 
 fn main() {
@@ -21,6 +23,7 @@ fn main() {
         .add_startup_system(spawn_camera)
         .add_plugin(GroundPlugin)
         .add_plugin(PlayerPlugin)
+        .add_plugin()
         .run();
 }
 
