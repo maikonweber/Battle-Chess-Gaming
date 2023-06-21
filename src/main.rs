@@ -1,12 +1,25 @@
 use bevy::prelude::*;
 
+use bevy::{
+    diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin},
+    prelude::*,
+};
+
 mod Player;
 use Player::PlayerPlugin;
+mod Ground;
+use Ground::GroundPlugin;
+mod system;
 
+use self::system::spawn_camera;
 
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins)
+        // .add_plugin(FrameTimeDiagnosticsPlugin::default())
+        // .add_plugin(LogDiagnosticsPlugin::default())
+        .add_startup_system(spawn_camera)
+        .add_plugin(GroundPlugin)
         .add_plugin(PlayerPlugin)
         .run();
 }
