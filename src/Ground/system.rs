@@ -1,25 +1,22 @@
+pub const numRows: u32 = 30;
+pub const numColums: u32 = 30;
 
-
-use bevy::prelude::{*, shape::Plane};
 use super::components::Ground;
+use bevy::prelude::{shape::{Plane, RegularPolygon}, *};
+
+
+#[derive(Component)]
+struct Component1;
 
 pub fn spawn_ground(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    commands.spawn((
-        PbrBundle {
-            mesh: meshes.add(shape::Plane::from_size(5.0).into()),
-            material: materials.add(Color::rgb(0.3, 0.5, 0.3).into()),
-            ..default()
-        },
-        Ground {
-            name: "RockSmith".to_string(),
-            width: 60,
-            height: 90,
-            hash: "to".to_string(),
-            ground_type: super::components::GroundType::Plant,
-        },
-    ));
+    for row in 0..numRows {
+        for column in 0..numColums {
+            let position = Vec3::new(column as f32, 0.0, row as f32);
+            println!("{} ",position.to_string());
+        }
+    }
 }

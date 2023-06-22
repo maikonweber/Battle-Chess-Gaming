@@ -24,11 +24,11 @@ pub fn spawn_camera(mut commands: Commands, window_query: Query<&Window, With<Pr
 
     commands.spawn(Camera3dBundle {
         projection: OrthographicProjection {
-            scale: 3.0,
+            scale: 15.0,
             scaling_mode: ScalingMode::FixedVertical(2.0),
             ..default()
         }.into(),
-        transform: Transform::from_xyz(5.0 , 5.0, 5.0).looking_at(Vec3::ZERO,  Vec3::Y),
+        transform: Transform::from_xyz(5.0 , 5.0,5.0).looking_at(Vec3::ZERO,  Vec3::Y),
         ..default()
     });
 }
